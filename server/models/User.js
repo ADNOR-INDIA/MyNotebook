@@ -11,7 +11,7 @@ const userSchema = new Schema({
         type:String,
         required: true
     },
-    email:{
+    email:{ 
         type: String,
         required:true,
         unique:true
@@ -26,5 +26,6 @@ const userSchema = new Schema({
     }
 
 });
-
-module.exports=mongoose.model('user', userSchema);
+const User = mongoose.model('user', userSchema);
+// User.createIndexes(); 
+module.exports=User;

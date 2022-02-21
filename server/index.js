@@ -1,12 +1,13 @@
 const connectToMongodb = require('./db');
 const express = require('express')
- 
+
 connectToMongodb();
 
 
 const app = express() 
-const port = 3000
+const port = 5000
 
+app.use(express.json())  //middlewarecd 
 // available routes
 // app.get('/', (req, res) => {
 //   res.send('Hello World!')
