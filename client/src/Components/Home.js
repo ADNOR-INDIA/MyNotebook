@@ -1,10 +1,7 @@
-import React, { useContext }  from 'react';
-import noteContext from '../context/notes/noteContext';
+import React from 'react';
+import Notes from "./Notes.js";
 
 const Home=()=>{
-  const context = useContext(noteContext);
-  const{notes, setNotes} = context; //destructuring done, jo context ke notes and setNotes the ab vo yha par a jayenge.
-
     return(
         <div className='container my-3'>
             <h1>Add a Note.</h1>
@@ -25,12 +22,8 @@ const Home=()=>{
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
   <div className='container my-3'>
-  <h2>Your Notes</h2>
-  {notes.map((notes)=>{
-    return notes.title;
-  })}
+  <Notes/>
   </div>
- 
 </div>
     )
 }
