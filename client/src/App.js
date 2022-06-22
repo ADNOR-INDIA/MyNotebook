@@ -2,6 +2,7 @@ import './App.css';
 import Home from './Components/Home';
 import Navbar from './Components/Navbar';
 import About from './Components/About';
+// import Alert from './Components/Alert.js';
 import{
   BrowserRouter as Router,
   Routes,
@@ -11,10 +12,11 @@ import NoteState from './context/notes/NoteState';
 
 function App() {
   return (
-    <NoteState>
+    <NoteState> 
     <Router>
       <div >
       <Navbar/>
+      {/* <Alert message="are you sure  you want to delete the note."/> */}
       <div className="container">
       <Routes>
       <Route exact path='/' element={<Home/>}/>
