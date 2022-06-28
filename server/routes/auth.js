@@ -7,15 +7,16 @@ const jwt = require('jsonwebtoken');
 let fetchuser = require('../middleware/fetchuser.js');
 
 
-// ROUTE_1 : Create a user using: POST "/api/auth". No login required
+// ROUTE_1 : Create a user using: POST "/api/auth/createuser". No login required
 router.post('/createUser',
     [body('email').isEmail(),
     body('password').isLength({min:5})],
     async(req, res)=>{
+        let success = false;
         // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);    
     if(!errors.isEmpty()){
-        return res.status(400).json({errors:errors.array()}); 
+        return res.status(400).json({success, errors:errors.array()}); 
     } 
     // console.log(req.body);
     // const user = User(req.body);
@@ -26,7 +27,7 @@ router.post('/createUser',
     try{
     let user =await User.findOne({email: req.body.email});
     if (user){
-        return res.status(400).json({error: "sorry user with this email already exists"}) 
+        return res.status(400).json({success, error: "sorry user with this email already exists"}) 
     }
     // making a secures password using bcrypt
     const salt = await bcrypt.genSalt(10);
@@ -46,9 +47,10 @@ router.post('/createUser',
       
     // JWT facilitates the secure connectin between client and server.
       const JWT_SECRET = 'safestringdonotshowtoanyone';
-      const token = jwt.sign(data, JWT_SECRET);
+      const authtoken = jwt.sign(data, JWT_SECRET);
       //res.json(user)
-      res.json(token);
+      success = true;
+      res.json({success, authtoken});
     }
     catch (error){
         console.log(error.message);
@@ -65,6 +67,7 @@ router.post('/login',
     [body('email').isEmail(),
     body('password').isLength({min:5})],
     async(req, res)=>{
+        let success=false
         // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);    
     if(!errors.isEmpty()){
@@ -75,12 +78,13 @@ router.post('/login',
     try{
         let user =await User.findOne({email:email});
         if(!user){
-            return res.status(400).json({error:"Wrong Credentials, please try again"});
+            return res.status(400).json({success, error:"Wrong Credentials, please try again"});
         }
 
         const passCompare = bcrypt.compare(password, user.password);
         if(!passCompare){
-            return res.status(400).json({error:"Wrong Credentials, please try again"});
+            return res.status(400).json({success, error:"Wrong Credentials, please try again"});
+            
         }
         const data = {
             user:{
@@ -88,8 +92,9 @@ router.post('/login',
             }
         }
         const JWT_SECRET = 'safestringdonotshowtoanyone';
-        const token = jwt.sign(data, JWT_SECRET);
-        res.json({'auth-token':token});
+        const authtoken = jwt.sign(data, JWT_SECRET);
+        success=true;
+        res.json({success, authtoken});
     }catch(error){
         console.log(error.message);
         res.status(500).send("Internal server error");
